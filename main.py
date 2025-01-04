@@ -5,7 +5,7 @@ from os.path import join
 #SETUP:
 pygame.init()
 pygame.display.set_caption('Space Shoot Py')
-WINDOW_WIDTH, WINDOW_HEIGHT = 480.0, 240.0
+WINDOW_WIDTH, WINDOW_HEIGHT = 240.0, 240.0
 display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 clock = pygame.time.Clock()
@@ -24,12 +24,12 @@ star_positions = [(randint(0, (int(WINDOW_WIDTH) - star_width)), randint(0, (int
 ##PLAYER:
 player_surface = pygame.image.load(join('materials','images','player.png')).convert_alpha()
 player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0))
-player_movement = pygame.math.Vector2(1.0,-1.0)
-player_speed = 128.0
 
 ##ASTEROIDS
 asteroid_surface = pygame.image.load(join('materials','images','asteroid.png')).convert_alpha()
 asteroid_frect = asteroid_surface.get_frect(center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 8))
+asteroid_movement = pygame.math.Vector2(0.8,-0.6)
+asteroid_speed = 128.0
 
 laser_surface = pygame.image.load(join('materials','images','laser.png')).convert_alpha()
 laser_frect = laser_surface.get_frect(center = (WINDOW_WIDTH / 4, WINDOW_HEIGHT / 6))
@@ -43,23 +43,27 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEMOTION:
+            player_frect.center = event.pos
 
     #DRAWING:
     display_surface.fill('gray11')
     for star_position in star_positions:
         display_surface.blit(star_surface, star_position)
 
+    #DRAW_ENEMY:
     display_surface.blit(asteroid_surface, asteroid_frect)
 
-    display_surface.blit(laser_surface, laser_frect)
+    asteroid_frect.center += asteroid_movement * asteroid_speed * delta_time
+
+    if asteroid_frect.right > borders.right or asteroid_frect.left < borders.left:
+        asteroid_movement[0] = -asteroid_movement[0]
+
+    if asteroid_frect.bottom > borders.bottom or asteroid_frect.top < borders.top:
+        asteroid_movement[1] = -asteroid_movement[1]
 
     #DRAW_PLAYER:
-    player_frect.center += player_movement * player_speed * delta_time
-
-    if player_frect.right > borders.right or player_frect.left < borders.left:
-        player_movement[0] = -player_movement[0]
-    if player_frect.bottom > borders.bottom or player_frect.top < borders.top:
-        player_movement[1] = -player_movement[1]
+    display_surface.blit(laser_surface, laser_frect)
     display_surface.blit(player_surface, player_frect)
 
     pygame.display.update()
