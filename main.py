@@ -52,6 +52,9 @@ while running:
     player_movement.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
     player_movement.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
 
+    # fixing speed boost by going diagonal with vector normalization, but check if it is not zero:
+    player_movement = player_movement.normalize() if player_movement else player_movement
+
     player_frect.center += player_movement * player_speed * delta_time
 
     #DRAWING:
