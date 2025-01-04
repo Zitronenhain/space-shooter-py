@@ -8,8 +8,6 @@ pygame.display.set_caption('Space Shoot Py')
 WINDOW_WIDTH, WINDOW_HEIGHT = 240.0, 240.0
 display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
-
-
 running = True
 speed = 0.1
 borders = pygame.FRect(10.0, 10.0,(WINDOW_WIDTH - 20.0), (WINDOW_HEIGHT - 20.0))
@@ -49,12 +47,12 @@ while running:
     display_surface.blit(laser_surface, laser_frect)
 
     #DRAW_PLAYER:
-    #player_frect.x += player_movement * speed
-    player_frect.y += player_movement * speed
+    player_frect.x += player_movement * speed
+    player_frect.y += -player_movement * speed
 
-    if player_frect.right > WINDOW_WIDTH or player_frect.left < 0:
+    if player_frect.right > borders.right or player_frect.left < borders.left:
         player_movement *= -1
-    if player_frect.bottom > WINDOW_HEIGHT or player_frect.top < 0:
+    if player_frect.bottom > borders.bottom or player_frect.top < borders.top:
         player_movement *= -1
     display_surface.blit(player_surface, player_frect)
 
