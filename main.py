@@ -5,23 +5,30 @@ from os.path import join
 #SETUP:
 pygame.init()
 pygame.display.set_caption('Space Shoot Py')
-WINDOW_WIDTH, WINDOW_HEIGHT = 240, 240
+WINDOW_WIDTH, WINDOW_HEIGHT = 240.0, 240.0
 display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 running = True
+#Rect FRect(left, top, width, height)
+borders = pygame.FRect(10.0, 10.0,(WINDOW_WIDTH - 20.0), (WINDOW_HEIGHT - 20.0))
+speed = (0.2, 0.2)
 
 #SURFACES:
-##PLAYER:
-player_surface = pygame.image.load(join('materials','images','player.png')).convert_alpha()
-player_rect = player_surface.get_frect( center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-#STARS:
+
+##STARS:
 star_surface = pygame.image.load(join('materials','images','star.png')).convert_alpha()
 star_height, star_width = star_surface.get_height(), star_surface.get_width()
-star_positions = [(randint(0, (WINDOW_WIDTH - star_width)), randint(0, (WINDOW_HEIGHT - star_height))) for i in range(20)]
+star_positions = [(randint(0, (int(WINDOW_WIDTH) - star_width)), randint(0, (int(WINDOW_HEIGHT) - star_height))) for i in range(20)]
 
+##PLAYER:
+player_surface = pygame.image.load(join('materials','images','player.png')).convert_alpha()
+player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+
+##ASTEROIDS
 asteroid_surface = pygame.image.load(join('materials','images','asteroid.png')).convert_alpha()
-asteroid_height, asteroid_width = asteroid_surface.get_height(), asteroid_surface.get_width()
-asteroid_positions = [(randint(0, (WINDOW_WIDTH - star_width)), randint(0, (WINDOW_HEIGHT - star_height))) for i in range(8)]
+asteroid_frect = asteroid_surface.get_rect(center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 8))
+
+laser_surface = pygame.image.load(join('materials','images','laser.png')).convert_alpha()
 
 while running:
     #EVENT_LOOP:
@@ -33,12 +40,20 @@ while running:
     display_surface.fill('gray11')
     for star_position in star_positions:
         display_surface.blit(star_surface, star_position)
-    for asteroid_position in asteroid_positions:
-        display_surface.blit(asteroid_surface, asteroid_position)
 
-    player_rect.left+=0.1
+        display_surface.blit(asteroid_surface, asteroid_frect)
 
-    display_surface.blit(player_surface, player_rect)
+        player_frect.move(0.2,0.2)
+
+        #if  player_frect.left <= borders.left or player_frect.right > borders.right:
+        #    speed[0] = -speed[0]
+        #if player_frect.top <= borders.top or player_frect.bottom > borders.bottom:
+        #    speed[1] = -speed[1]
+
+        display_surface.blit(player_surface, player_frect)
+
+    #pygame.draw.rect(display_surface, (255,0,0), borders)
+
     pygame.display.update()
 
 pygame.quit()
