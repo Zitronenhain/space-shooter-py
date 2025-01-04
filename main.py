@@ -25,7 +25,7 @@ star_positions = [(randint(0, (int(WINDOW_WIDTH) - star_width)), randint(0, (int
 player_surface = pygame.image.load(join('materials','images','player.png')).convert_alpha()
 player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0))
 player_movement = pygame.math.Vector2(1.0,-1.0)
-player_speed = 0.8
+player_speed = 128.0
 
 ##ASTEROIDS
 asteroid_surface = pygame.image.load(join('materials','images','asteroid.png')).convert_alpha()
@@ -36,7 +36,9 @@ laser_frect = laser_surface.get_frect(center = (WINDOW_WIDTH / 4, WINDOW_HEIGHT 
 
 while running:
     #SET_FPS:
-    clock.tick(30)
+    delta_time = clock.tick() / 1000
+    #print(clock.get_fps())
+
     #EVENT_LOOP:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,7 +54,7 @@ while running:
     display_surface.blit(laser_surface, laser_frect)
 
     #DRAW_PLAYER:
-    player_frect.center += player_movement * player_speed
+    player_frect.center += player_movement * player_speed * delta_time
 
     if player_frect.right > borders.right or player_frect.left < borders.left:
         player_movement[0] = -player_movement[0]
