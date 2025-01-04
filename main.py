@@ -24,6 +24,8 @@ star_positions = [(randint(0, (int(WINDOW_WIDTH) - star_width)), randint(0, (int
 ##PLAYER:
 player_surface = pygame.image.load(join('materials','images','player.png')).convert_alpha()
 player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0))
+player_movement = pygame.math.Vector2(0.0, 0.0)
+player_speed = 128.0
 
 ##ASTEROIDS
 asteroid_surface = pygame.image.load(join('materials','images','asteroid.png')).convert_alpha()
@@ -43,8 +45,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEMOTION:
-            player_frect.center = event.pos
+
+    #MOVEMENT:
+    keys = pygame.key.get_pressed()
+
+    player_movement.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
+    player_movement.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
+
+    player_frect.center += player_movement * player_speed * delta_time
 
     #DRAWING:
     display_surface.fill('gray11')
