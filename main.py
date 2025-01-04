@@ -26,9 +26,10 @@ player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2, WINDOW_HEIG
 
 ##ASTEROIDS
 asteroid_surface = pygame.image.load(join('materials','images','asteroid.png')).convert_alpha()
-asteroid_frect = asteroid_surface.get_rect(center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 8))
+asteroid_frect = asteroid_surface.get_frect(center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 8))
 
 laser_surface = pygame.image.load(join('materials','images','laser.png')).convert_alpha()
+laser_frect = laser_surface.get_frect(center = (WINDOW_WIDTH / 4, WINDOW_HEIGHT / 6))
 
 while running:
     #EVENT_LOOP:
@@ -51,7 +52,7 @@ while running:
         #    speed[1] = -speed[1]
 
         display_surface.blit(player_surface, player_frect)
-
+        display_surface.blit(laser_surface, laser_frect)
     #pygame.draw.rect(display_surface, (255,0,0), borders)
 
     pygame.display.update()
