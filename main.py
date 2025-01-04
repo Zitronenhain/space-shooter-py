@@ -8,10 +8,11 @@ pygame.display.set_caption('Space Shoot Py')
 WINDOW_WIDTH, WINDOW_HEIGHT = 240.0, 240.0
 display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
+
+
 running = True
-#Rect FRect(left, top, width, height)
+speed = 0.1
 borders = pygame.FRect(10.0, 10.0,(WINDOW_WIDTH - 20.0), (WINDOW_HEIGHT - 20.0))
-speed = (0.2, 0.2)
 
 #SURFACES:
 
@@ -22,7 +23,8 @@ star_positions = [(randint(0, (int(WINDOW_WIDTH) - star_width)), randint(0, (int
 
 ##PLAYER:
 player_surface = pygame.image.load(join('materials','images','player.png')).convert_alpha()
-player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+player_frect = player_surface.get_frect( center = (WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0))
+player_movement = 1.0
 
 ##ASTEROIDS
 asteroid_surface = pygame.image.load(join('materials','images','asteroid.png')).convert_alpha()
@@ -42,18 +44,19 @@ while running:
     for star_position in star_positions:
         display_surface.blit(star_surface, star_position)
 
-        display_surface.blit(asteroid_surface, asteroid_frect)
+    display_surface.blit(asteroid_surface, asteroid_frect)
 
-        player_frect.move(0.2,0.2)
+    display_surface.blit(laser_surface, laser_frect)
 
-        #if  player_frect.left <= borders.left or player_frect.right > borders.right:
-        #    speed[0] = -speed[0]
-        #if player_frect.top <= borders.top or player_frect.bottom > borders.bottom:
-        #    speed[1] = -speed[1]
+    #DRAW_PLAYER:
+    #player_frect.x += player_movement * speed
+    player_frect.y += player_movement * speed
 
-        display_surface.blit(player_surface, player_frect)
-        display_surface.blit(laser_surface, laser_frect)
-    #pygame.draw.rect(display_surface, (255,0,0), borders)
+    if player_frect.right > WINDOW_WIDTH or player_frect.left < 0:
+        player_movement *= -1
+    if player_frect.bottom > WINDOW_HEIGHT or player_frect.top < 0:
+        player_movement *= -1
+    display_surface.blit(player_surface, player_frect)
 
     pygame.display.update()
 
